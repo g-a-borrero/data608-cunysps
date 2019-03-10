@@ -1,0 +1,117 @@
+---
+title: "hw3"
+author: "Gabrielle Bartomeo"
+date: "March 9, 2019"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(shiny)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include=F}
+data <- read.csv("https://raw.githubusercontent.com/charleyferrari/CUNY_DATA_608/master/module3/data/cleaned-cdc-mortality-1999-2010-2.csv", header = T)
+```
+
+
+# Question 1
+
+> As a researcher, you frequently compare mortality rates from particular causes across different States. You need a visualization that will let you see (for 2010 only) the crude mortality rate, across all States, from one cause (for example, Neoplasms, which are effectively cancers). Create a visualization that allows you to rank States by crude mortality for each cause of death.
+
+```{r echo=F, warning=F}
+ui <- fluidPage(
+  headerPanel('Mortality Rates across States'),
+  sidebarPanel(
+    selectInput('cause', 'Cause of Death', unique(data$ICD.Chapter), selected='Certain infectious and parasitic diseases')
+  ),
+  mainPanel(
+    plotOutput('plot1')
+  )
+)
+
+server <- shinyServer(function(input, output, session) {
+  
+  selectedData <- reactive({
+    dfSlice <- data %>%
+      filter(ICD.Chapter == input$cause, Year == 2010)
+  })
+  
+  output$plot1 <- renderPlot({
+    
+    dfSlice <- data %>%
+      filter(ICD.Chapter == input$cause, Year == 2010)
+    
+    ggplot(selectedData(), aes(x = reorder(State, -Crude.Rate), y = Crude.Rate, fill = State)) +
+      geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      labs(x="States")
+  })
+  
+})
+
+shinyApp(ui = ui, server = server)
+```
+
+# Question 2
+
+> Often you are asked whether particular States are improving their mortality rates (per cause) faster than, or slower than, the national average. Create a visualization that lets your clients see this for themselves for one cause of death at the time. Keep in mind that the national average should be weighted by the national population.
+
+```{r echo=F, warning=F}
+q2 <- data %>%
+  group_by(ICD.Chapter, State) %>%
+  select(ICD.Chapter, State, Crude.Rate, Year)
+
+q2_nat <- data %>% 
+  group_by(ICD.Chapter, Year) %>%
+  summarize(Crude.Rate = sum(Population*Crude.Rate)/sum(Population), State="USA")
+
+q2 <- rbind(q2, q2_nat)
+
+q2 <- q2 %>% 
+  group_by(ICD.Chapter, State) %>% 
+  mutate(Rate.Change = Crude.Rate - lag(Crude.Rate, default=first(Crude.Rate)))
+
+ui <- fluidPage(
+  headerPanel('Mortality Rate Changes across States Compared To National Rates'),
+  sidebarPanel(
+    selectInput('cause', 'Cause of Death', unique(data$ICD.Chapter), selected='Certain infectious and parasitic diseases')
+  ),
+  mainPanel(
+    plotOutput('plot2')
+  )
+)
+
+server <- shinyServer(function(input, output, session) {
+  
+  selectedData <- reactive({
+    dfSlice <- q2 %>%
+      filter(ICD.Chapter == input$cause) %>%
+      group_by(State) %>%
+      mutate(Change.Vs.National = filter(q2, State=="USA", ICD.Chapter==input$cause)$Rate.Change - Rate.Change) %>%
+      filter(State != "USA")
+  })
+  
+
+  output$plot2 <- renderPlot({
+    
+    dfSlice <- q2 %>%
+      filter(ICD.Chapter == input$cause) %>%
+      group_by(State) %>%
+      mutate(Change.Vs.National = filter(q2, State=="USA", ICD.Chapter==input$cause)$Rate.Change - Rate.Change) %>%
+      filter(State != "USA")
+    
+    ggplot(selectedData(), aes(x = State, y = Change.Vs.National, fill = Year)) +
+      geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      labs(x="States") #x=State, x=States
+  })
+  
+})
+
+shinyApp(ui = ui, server = server)
+```
+
