@@ -1,0 +1,55 @@
+<html>
+
+<body>
+	<h1>Module6, Part One</h1>
+	<h2>Word Reverse</h2>
+	<script>
+		function word_reverse(word){
+			return(word.split("").reverse().join(""));
+		}
+
+		function word_reverse_click(){
+			var rw = document.getElementById("reversed_word");
+			rw.innerHTML = word_reverse(document.getElementById("word_to_reverse").value);
+		}
+	</script>
+	<p>
+		
+		<form>
+			Reverse a word! <input id="word_to_reverse" type="text" size="15">
+			<input type="button" value="Reverse!" onClick="word_reverse_click();">
+		</form>
+	</p>
+	<div id="reversed_word"></div>
+	<h2>Multiples of Numbers</h2>
+	<script>
+		function multiples(multiply_me){
+			var table_string = "<table border=\"1\">";
+			var i;
+			for (i=1; i <= 20; i++){
+				if (i == 1){
+					table_string += "<tr>";
+				} else if ([5,9,13,17].includes(i)){
+					table_string += "</tr><tr>";
+				}
+				table_string += "<td>" + i*multiply_me + "</td>";
+			}
+			table_string += "</tr></table>";
+			return(table_string);
+		}
+
+		function multiples_click(){
+			var tm = document.getElementById("table_of_multiples");
+			tm.innerHTML = multiples(document.getElementById("num").value);
+		}
+	</script>
+	<p>
+		<form>
+			Twenty multiples of a number! <input id="num" type="number" size=15>
+			<input type="button" value="Multiples!" onClick="multiples_click();">
+		</form>
+	</p>
+	<div id="table_of_multiples"></div>
+</body>
+
+</html>
