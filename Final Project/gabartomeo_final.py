@@ -20,3 +20,16 @@ nyc_hhs.columns = ["Household Size", "Number of Households"]
 nyc_census_summary = pd.read_html("https://www1.nyc.gov/site/planning/data-maps/nyc-population/census-summary-2000.page")[0]
 nyc_census_summary = nyc_census_summary.iloc[1:, [0,3]]
 nyc_census_summary.columns = ["Boroughs", "Population in 2000"]
+
+# This gives us the income per household # Works
+nyc_income_by_agi = pd.read_json("https://data.cityofnewyork.us/resource/ipc3-2nbm.json")
+nyc_income_by_agi.columns = ["%", "average income per filer"] + [i.replace("_", " ") for i in nyc_income_by_agi.columns[2:]]
+nyc_income_by_agi.columns = [i.replace("minimun", "minimum").title() for i in nyc_income_by_agi.columns]
+nyc_income_by_agi = nyc_income_by_agi[list(nyc_income_by_agi)[2:] + list(nyc_income_by_agi)[:2]]
+nyc_income_by_agi.fillna(0, inplace=True)
+
+# This gives us the number of extremely low income units by borough
+nyc_eli_units = pd.read_json("https://data.cityofnewyork.us/resource/hg8x-zxpr.json?$select=borough,sum(extremely_low_income_units)&$group=borough")
+nyc_eli_units.columns = ["Borough", "Extremely Low Income Units"]
+
+print(nyc_eli_units)
