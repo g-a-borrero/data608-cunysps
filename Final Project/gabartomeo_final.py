@@ -235,17 +235,18 @@ app.layout = html.Div([
 		},
 		style_header={'fontWeight': 'bold'}
 	),
-	html.P(children="Without even comparing directly, the answer is a clear, resounding \"No\". There is not enough housing in New York City for all of the extremely low income households. It only looks worse when compared side-by-side."),
+	html.P(children="Without even comparing directly, the answer is a clear, resounding \"No\" by looking at this table displaying the number of extremely low income rental units built since 2014. There is not enough housing in New York City for all of the extremely low income households; this was true before, and with the ever-increasing number of people in New York City, it's true now. This only looks worse when compared side-by-side."),
 	dcc.Graph(
 		id="nycamiRentBar",
 		figure={
 			"data": [go.Bar(x=nyc_boro_ami["Borough"].unique().tolist(), y=nyc_boro_ami.loc[nyc_boro_ami["AMI Category"] == "Extremely Low Income"]["Number of Households"].tolist(), name="Extremely Low Income Households"), 
 				go.Bar(x=nyc_eli_units["Borough"].unique().tolist(), y=nyc_eli_units.iloc[:,1].tolist(), name="Extremely Low Income Rentals", marker=dict(color='rgb(128,128,128)',))],
 			"layout": go.Layout(
-					title="Extremely Low Income Families vs Extremely Low Income Rentals by Borough"
+					title="Extremely Low Income Families vs Extremely Low Income Rentals (since 2014) by Borough"
 			)
 		}
 	),
+	html.P(children="If we use the 20,479 extremely low income rental units to create an average per year, that would mean that since 1920, 405,484 extremely low income rental units were built. This still would fail to house all the extremely low income residents of New York City."),
 	html.H2(children="Conclusion"),
 	html.P(children="New York City has a lot of extremely low income individuals, spread across households from 1 to more than 7 people each, spread across all of the boroughs. The truth of the matter is, with all of the extremely low income housing available in New York City, there's nowehere to house them. While shelters and programs like Section 8 exist, it is doubtful these measures are adequate for caring for those less fortunate New Yorkers trying to live their life on a dime. Without measures being implemented, these forgotten many will continue to struggle in silence to even have a roof over their heads, no less food in their stomachs."),
 	html.H2(children="Sources"),
