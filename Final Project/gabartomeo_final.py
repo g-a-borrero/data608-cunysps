@@ -247,7 +247,15 @@ app.layout = html.Div([
 		}
 	),
 	html.H2(children="Conclusion"),
-	html.P(children="New York City has a lot of extremely low income individuals, spread across households from 1 to more than 7 people each, spread across all of the boroughs. The truth of the matter is, with all of the extremely low income housing available in New York City, there's nowehere to house them. While shelters and programs like Section 8 exist, it is doubtful these measures are adequate for caring for those less fortunate New Yorkers trying to live their life on a dime. Without measures being implemented, these forgotten many will continue to struggle in silence to even have a roof over their heads, no less food in their stomachs.")
+	html.P(children="New York City has a lot of extremely low income individuals, spread across households from 1 to more than 7 people each, spread across all of the boroughs. The truth of the matter is, with all of the extremely low income housing available in New York City, there's nowehere to house them. While shelters and programs like Section 8 exist, it is doubtful these measures are adequate for caring for those less fortunate New Yorkers trying to live their life on a dime. Without measures being implemented, these forgotten many will continue to struggle in silence to even have a roof over their heads, no less food in their stomachs."),
+	html.H2(children="Sources"),
+	dcc.Markdown('''
+* [Affordable Housing - Area Median Income](https://www1.nyc.gov/site/hpd/renters/area-median-income.page)
+* [2000 Census - NYC Household Size](https://factfinder.census.gov/bkmk/table/1.0/en/DEC/00_SF4/HCT005/1600000US3651000)
+* [NYC Census Summary 2000](https://www1.nyc.gov/site/planning/data-maps/nyc-population/census-summary-2000.page)
+* [Personal Income by AGI Range](https://data.cityofnewyork.us/City-Government/Personal-Income-By-AGI-Range/ipc3-2nbm)
+* [Housing New York Units by Building](https://data.cityofnewyork.us/Housing-Development/Housing-New-York-Units-by-Building/hg8x-zxpr)
+''')
 ])
 
 if __name__ == '__main__':
